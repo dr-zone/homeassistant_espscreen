@@ -52,12 +52,12 @@ output:
     id: gpio_backlight_pwm
 
 display:
-  - platform: rpi_dpi_rgb
+  - platform: mipi_rgb
+    model: custom
     id: my_display
     dimensions:
       width: 800
       height: 480
-    buffer_size: ${LVGL_BUFFER_SIZE}
     auto_clear_enabled: true
     color_order: RGB
     pclk_frequency: 16MHz
