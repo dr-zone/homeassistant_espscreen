@@ -1,0 +1,106 @@
+# ESP Screens - Elecrow CrowPanel Basic 5.0-inch ESP32-S3 (800x480 RGB DPI)
+#
+# 800x480 at 187 dpi. An 800x480 TFT LCD panel with ILI6122 and ILI5960 RGB display drivers (using ESPHome's rpi_dpi_rgb platform),
+# GT911 capacitive touch, and an ESP32-S3-WROOM-1 controller.
+
+esphome:
+  min_version: 2026.9.0
+
+packages:
+  hardware: !include ../hardware/esp32s3-rgb.yaml
+  look: !include ../looks/standard.yaml
+  touch: !include ../features/capacitive-touch.yaml
+  backlight: !include ../features/backlight.yaml
+  self_test: !include ../features/self-test.yaml
+  snapshot: !include ../features/snapshot.yaml
+
+substitutions:
+  BOARD_ID: "crowpanel5s3"
+  DEVICE_NAME: "crowpanel5s3"
+  DEVICE_FRIENDLY_NAME: "CrowPanel Basic 5.0"
+
+  PANEL_W: "800"
+  PANEL_H: "480"
+  DISPLAY_DPI: "187"
+
+  GRID_COLS: "4"
+  GRID_ROWS: "4"
+  GRID_COLS_PORTRAIT: "2"
+  GRID_ROWS_PORTRAIT: "7"
+
+  SCREEN_MAX_TILES: "128"
+  SCREEN_MAX_PAGES: "12"
+  SCREEN_MAX_BAR_ITEMS: "8"
+  LVGL_BUFFER_SIZE: "20%"
+
+  TOUCH_SDA: GPIO19
+  TOUCH_SCL: GPIO20
+
+# ============================================================
+# Hardware Configuration
+# ============================================================
+
+i2c:
+  - id: touch_bus
+    sda: ${TOUCH_SDA}
+    scl: ${TOUCH_SCL}
+    scan: true
+
+output:
+  - platform: ledc
+    pin: GPIO2
+    id: gpio_backlight_pwm
+
+display:
+  - platform: rpi_dpi_rgb
+    id: my_display
+    dimensions:
+      width: 800
+      height: 480
+    buffer_size: ${LVGL_BUFFER_SIZE}
+    auto_clear_enabled: true
+    color_order: RGB
+    pclk_frequency: 16MHz
+    hsync_pulse_width: 4
+    hsync_back_porch: 8
+    hsync_front_porch: 8
+    vsync_pulse_width: 4
+    vsync_back_porch: 8
+    vsync_front_porch: 8
+    de_pin: GPIO40
+    hsync_pin: GPIO39
+    vsync_pin: GPIO41
+    pclk_pin: GPIO42
+    data_pins:
+      red:
+        - GPIO45
+        - GPIO48
+        - GPIO47
+        - GPIO21
+        - GPIO14
+      green:
+        - GPIO5
+        - GPIO6
+        - GPIO7
+        - GPIO15
+        - GPIO16
+        - GPIO4
+      blue:
+        - GPIO11
+        - GPIO12
+        - GPIO13
+        - GPIO1
+        - GPIO0
+
+touchscreen:
+  - platform: gt911
+    id: ts_touch
+    i2c_id: touch_bus
+    display: my_display
+    reset_pin: GPIO38
+    interrupt_pin: GPIO38
+    update_interval: 20ms
+    transform: 
+      mirror_x: false                                          # Do not invert X-axis coordinates
+      mirror_y: false                                          # Do not invert Y-axis coordinates
+      swap_xy: false                                           # Do not swap X and Y axes
