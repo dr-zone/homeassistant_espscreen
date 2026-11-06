@@ -58,7 +58,8 @@ display:
     dimensions:
       width: 800
       height: 480
-    auto_clear_enabled: true
+    auto_clear_enabled: false
+    update_interval: never
     color_order: RGB
     pclk_frequency: 16MHz
     hsync_pulse_width: 4
