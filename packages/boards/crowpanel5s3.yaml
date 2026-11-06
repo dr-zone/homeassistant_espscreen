@@ -98,8 +98,6 @@ touchscreen:
     id: ts_touch
     i2c_id: touch_bus
     display: my_display
-    reset_pin: GPIO38
-    interrupt_pin: GPIO38
     update_interval: 20ms
     transform: 
       mirror_x: false                                          # Do not invert X-axis coordinates
